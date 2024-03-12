@@ -1,3 +1,4 @@
+'use server';
 import {
   AddBookParams,
   BookResponse,
@@ -13,17 +14,32 @@ import {
 } from '@/utils/definitions';
 import axios from 'axios';
 import { handleError } from './errorHandler';
-
-const AUTH_TOKEN =
-  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjFlMjVmNmIwYTJjY2I5NTU5MWVjNyIsImlhdCI6MTY4OTM3OTQyMywiZXhwIjoxNjg5NDYyMjIzfQ.hT2Ta6pBhDR1vOF7LjcKxofyASDPjcTZtFi9CESKIuA';
+import { auth } from '../../auth';
 
 const instance = axios.create({
   baseURL: 'https://readjourney.b.goit.study/api',
 });
 
-instance.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+instance.interceptors.request.use(
+  async config => {
+      const session = await auth();
+      console.log(`session:`, session);
 
-export const signup = async (params: SignupParams): Promise<UserResponse> => {
+      const token = session?.accessToken;
+      console.log(`token:`, token);
+
+      if (token) {
+          config.headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      return config;
+  },
+  error => {
+      return Promise.reject(error);
+  },
+);
+
+export const signUp = async (params: SignupParams): Promise<UserResponse> => {
   try {
       const { data } = await instance.post<UserResponse>(
           '/users/signup',
@@ -36,7 +52,7 @@ export const signup = async (params: SignupParams): Promise<UserResponse> => {
   }
 };
 
-export const signin = async (params: SigninParams): Promise<UserResponse> => {
+export const signIn = async (params: SigninParams): Promise<UserResponse> => {
   try {
       const { data } = await instance.post<UserResponse>(
           '/users/signin',
@@ -59,7 +75,19 @@ export const getCurrentUser = async (): Promise<UserResponse> => {
   }
 };
 
-export const signout = async (): Promise<void> => {
+export const getCurrentUserRefresh = async (): Promise<UserResponse> => {
+  try {
+      const { data } = await instance.get<UserResponse>(
+          '/users/current/refresh',
+      );
+      return data;
+  } catch (error: unknown) {
+      handleError(error);
+      throw error;
+  }
+};
+
+export const signOut = async (): Promise<void> => {
   try {
       await instance.post('/users/signout');
       console.log('Sign out success');
