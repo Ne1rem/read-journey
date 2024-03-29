@@ -14,7 +14,6 @@ export const selectedStyles = (): StylesConfig<OptionType, boolean> => ({
         ...styles,
 
         width: '120px',
-        // height: 'max-content',
         padding: '12px 14px',
         fontSize: '12px',
         fontWeight: '500',
