@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
+}
+
+body {
+    @apply bg-lightBlack text-sm font-medium text-lightGrey;
+}
+
+.custom-scrollbar {
+    height: 70vh;
+    overflow-y: auto;
+    margin-top: 16px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    background-color: transparent;
+    border-radius: 20px;
+    width: 6px;
+    opacity: 0.3;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    border-radius: 20px;
+    opacity: 0.3;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    width: 6px;
+    background: #262626;
+    border-radius: 20px;
+    opacity: 0.3;
+}
+
+.input-number::-webkit-outer-spin-button,
+.input-number::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-number {
+    -moz-appearance: textfield;
+}
